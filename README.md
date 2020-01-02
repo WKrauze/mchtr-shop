@@ -9,7 +9,7 @@ Wygenerowany plan zależy od:
 
 # Wymagania
 
-System linux
+- System linux
 
 # Uruchomienie
 
