@@ -9,7 +9,7 @@ pdf.set_font("DejaVu", size=10)
 i = True
 while i:
     try:
-        cpv = input("Podaj CPV zamawianego towaru/usługi: ")
+        cpv = input("Podaj trzy pierwsze cyfry kodu CPV zamawianego towaru/usługi: ")
         cpv = int(cpv)
         i = False
     except ValueError:
@@ -32,7 +32,7 @@ while i:
 
 i = True
 while i:
-    split_payment = input("Czy zamawiany produkt/usługa znajduje się na liście split-payment? (tak/nie) ").lower()
+    split_payment = input("Czy zamawiany produkt/usługa znajduje się na liście split-payment.pdf? (tak/nie) ").lower()
     if split_payment not in ('tak', 'nie'):
         print("Błędna odpowiedź. Tylko 'tak' i 'nie' są akceptowane. ")
     else:
@@ -53,19 +53,19 @@ num = 1
 # Sekcja 1 - wypisanie wniosku (naukowy, nienaukowy, split-payment)
 pdf.multi_cell(180, 7, txt="PRZYGOTOWANIE WNIOSKU", align="C")
 if research == 'tak':
-    pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij wniosek zgodnie z plikiem Wniosek-badawczy.odt. Pamiętaj o "
+    pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij wniosek zgodnie z plikiem wniosek-badawczy.odt. Pamiętaj o "
                                           "uzupełnieniu informacji o projekcie badawczym, z którego środków realizowany"
                                           " jest zakup.")
     num += 1
 else:
-    pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij wniosek zgodnie z plikiem Wniosek-standard.odt")
+    pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij wniosek zgodnie z plikiem wniosek-standard.odt")
     num += 1
 pdf.multi_cell(180, 7, txt=str(num) + ". Podpisz wniosek jako 'osoba wnioskująca'. Zdobądź podpis dysponenta środków "
                                       "jako 'kierownika projektu'. ")
 num += 1
 
 if split_payment == 'tak':
-    pdf.multi_cell(180, 7, txt=str(num) + ". W polu przedmiot wniosku dopisz: 'poz. ... zał. 15 ustawy o VAT'. ")
+    pdf.multi_cell(180, 7, txt=str(num) + ". W polu przedmiot wniosku dopisz: 'poz. ... zał. 15 ustawy o VAT' - numer pozycji weź z pliku split-payment.pdf. ")
     num += 1
 else:
     pdf.multi_cell(180, 7, txt=str(num) + ". W polu przedmiot wniosku dopisz: 'przedmiot wniosku niewykazany "
@@ -113,7 +113,7 @@ if rule_num != 0:
         pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij zaproszenie do składania ofert (zaproszenie.odt) oraz opis"
                                               " przedmiotu zamówienia (opis-przedmiotu-zamowienia.odt). Załącz"
                                               " wzór propozycji cenowej (wzor-propozycji-cenowej.odt) i taki"
-                                              " komplet dokumentów przekaż Dyrektorowi.")
+                                              " komplet dokumentów przekaż Dyrektorowi (pozostaw w p. 627).")
         num += 1
         pdf.multi_cell(180, 7, txt=str(num) + ". Dyrektor podpisze zaproszenie. Odbierz dokumenty.")
         num += 1
@@ -139,29 +139,38 @@ if rule_num != 0 :
     else:
         pdf.multi_cell(180, 7, txt="RAPORT WYKONANYCH CZYNNOŚCI", align="C")
         pdf.multi_cell(180, 7, txt=str(num) + ". Na podstawie wykonanego przeglądu ofert uzupełnij raport wykonanych"
-                                              " czynności (raport-wykonanych-czynnosci.odt). Wydrukuj i podpisz.")
+                                              " czynności (protokol-wykonanych-czynnosci.odt). Nie zmieniaj kursu euro"
+                                              " w raporcie. Wydrukuj i podpisz. W punkcie 9 raportu należy zebrać"
+                                              " podpisy 3 pracowników ZiF. ")
         num += 1
-
 
 # Sekcja 4 - podpisanie zamówienia, umowy
 if rule_num != 0:
     if price <= 10000:
         pdf.multi_cell(180, 7, txt="PODPISANIE ZAMÓWIENIA", align="C")
-        pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij zamówienie (zamowienie.odt). Złóż dwie kopie zamówienia i"
-                                              " jedną kopię notatki służbowej do Dyrektora. Odbierz"
+        pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij zamówienie (zamowienie.odt). Złóż dwie kopie zamówienia,"
+                                              " jedną kopię notatki służbowej i wydrukowane oferty do Dyrektora. Odbierz"
                                               " podpisane kopie zamówienia. Wyślij oryginał lub skan firmie"
                                               " realizującej dostawę/usługę. Firma powinna podpisać dokumenty i"
                                               " odesłać jedną kopię przed realizacją dostawy/usługi.")
         num += 1
     else:
         pdf.multi_cell(180, 7, txt="PODPISANIE UMOWY", align="C")
-        pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij umowę (umowa.odt). Złóż dwie kopie umowy i jedną kopię"
-                                              " raportu wykonanych czynności do Dyrektora. Odbierz podpisane kopie umowy."
-                                              " Wyślij obie papierowe kopie firmie realizującej dostawę/usługę. Firma powinna"
-                                              " podpisać dokumenty i odesłać jedną kopię przed realizacją"
-                                              " dostawy/usługi.")
+        if research == 'tak':
+            pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij umowę (umowa.odt). Złóż dwie kopie umowy, jedną kopię"
+                                                  " raportu wykonanych czynności i wydrukowane oferty do Dyrektora. Odbierz podpisane kopie umowy."
+                                                  " Wyślij obie papierowe kopie firmie realizującej dostawę/usługę. Firma powinna"
+                                                  " podpisać dokumenty i odesłać jedną kopię przed realizacją"
+                                                  " dostawy/usługi.")
+        else:
+            pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij umowę (umowa-badawczy.odt). Złóż dwie kopie umowy, jedną kopię"
+                                                  " raportu wykonanych czynności i wydrukowane oferty do Dyrektora. Odbierz podpisane kopie umowy."
+                                                  " Wyślij obie papierowe kopie firmie realizującej dostawę/usługę. Firma powinna"
+                                                  " podpisać dokumenty i odesłać jedną kopię przed realizacją"
+                                                  " dostawy/usługi.")
         num += 1
 
+# TODO: RODO jako dodatek do umowy? (zamówienia też?)
 
 # Sekcja 5 - zakup - faktura przelew lub zwykła
 pdf.multi_cell(180, 7, txt="ZAKUP", align="C")
@@ -195,6 +204,14 @@ pdf.multi_cell(180, 7, txt="02-525 Warszawa", align="C")
 pdf.multi_cell(180, 7, txt="NIP: 525-000-58-34", align="C")
 pdf.multi_cell(180, 7, txt="", align="C")
 
+pdf.multi_cell(180, 7, txt="Dopuszczalne też jest wystawienie faktury na: ")
+
+pdf.multi_cell(180, 7, txt="", align="C")
+pdf.multi_cell(180, 7, txt="Politechnika Warszawska", align="C")
+pdf.multi_cell(180, 7, txt="Plac Politechniki 1", align="C")
+pdf.multi_cell(180, 7, txt="00-661 Warszawa", align="C")
+pdf.multi_cell(180, 7, txt="NIP: 525-000-58-34", align="C")
+pdf.multi_cell(180, 7, txt="", align="C")
 
 # Sekcja 6 - opisanie faktury
 pdf.multi_cell(180, 7, txt="OPISANIE FAKTURY", align="C")
@@ -211,11 +228,12 @@ pdf.multi_cell(180, 7, txt=str(
         num) + ". Podpisz opis faktury.")
 num += 1
 
-
 # Sekcja 7 - złożenie faktury do działu administracyjnego
 pdf.multi_cell(180, 7, txt=str(
         num) + ". Przekaż wszystkie dokumenty do działu księgowego (p. 627).")
 num += 1
+
+
 
 print('Plan realizacji zakupu wygenerowany do pliku PDF.')
 
