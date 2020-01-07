@@ -9,12 +9,20 @@ Wygenerowany plan zależy od:
 
 # Wymagania
 
-- System linux
+- System Linux lub Windows
 
 # Uruchomienie
 
+Linux:
 - Pobierz i rozpakuj repozytorium
-- W terminalu przejdź do folderu 'dist'
+- W terminalu przejdź do folderu 'dist-linux'
 - Uruchom plik 'main' wpisując w terminalu './main'
+- Odpowiedz na pytania pojawiające się w terminalu
+- Plan realizacji zakupów zostanie wygenerowany do pliku PDF.
+
+Windows:
+- Pobierz i rozpakuj repozytorium
+- Przejdź do folderu 'dist-windows'
+- Uruchom plik 'main'
 - Odpowiedz na pytania pojawiające się w terminalu
 - Plan realizacji zakupów zostanie wygenerowany do pliku PDF.
