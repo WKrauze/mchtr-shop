@@ -1,10 +1,22 @@
+# mchtr-shop 0.3
+
 from fpdf import FPDF
+from sys import platform
 import sys
+
+if platform == "linux" or platform == "linux2":
+    system = 'linux'
+elif platform == "win32":
+    system = 'windows'
 
 pdf = FPDF()
 pdf.add_page()
-pdf.add_font('DejaVu', '', '/usr/share/fonts/TTF/DejaVuSans.ttf', uni=True)
-pdf.set_font("DejaVu", size=10)
+if system == 'linux':
+    pdf.add_font('DejaVu', '', '/usr/share/fonts/TTF/DejaVuSans.ttf', uni=True)
+    pdf.set_font("DejaVu", size=10)
+else:
+    pdf.add_font('Tahoma', '', 'C:/WINDOWS/Fonts/Tahoma.ttf', uni=True)
+    pdf.set_font('Tahoma', size=10)
 
 i = True
 while i:
