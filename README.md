@@ -1,4 +1,4 @@
-# mchtr-shop
+# mchtr-shop 0.45
 
 Skrypt genererujący plan realizacji zakupów na Wydziale Mechatroniki PW.
 Wygenerowany plan zależy od:
