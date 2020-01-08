@@ -1,4 +1,4 @@
-# mchtr-shop 0.4
+# mchtr-shop 0.45
 # LICENSE: MIT
 
 from fpdf import FPDF
@@ -230,9 +230,11 @@ if rule_num == 1:
                 num += 1
             pdf.multi_cell(180, 7, txt=str(num) + ". Odbierz podpisane kopie umowy.")
             num += 1
-            pdf.multi_cell(180, 7, txt=str(num) + ". Wyślij obie papierowe kopie firmie realizującej dostawę/usługę razem z dokumentem RODO (RODO-badawczy.odt). Firma powinna"
-                                                  " podpisać dokumenty i odesłać jedną kopię umowy i dokument RODO przed realizacją"
-                                                  " dostawy/usługi.")
+            pdf.multi_cell(180, 7, txt=str(num) + ". Wyślij obie papierowe kopie firmie realizującej dostawę/usługę"
+                                                  " razem z dokumentem RODO (RODO-badawczy.odt), kopią oferty złożonej"
+                                                  " przez wykonawcę, wzorem protokołu odbioru (protokol-odbioru.odt) i opisem przedmiotu"
+                                                  " zamówienia. Firma powinna podpisać dokumenty i odesłać jedną kopię"
+                                                  " umowy i dokument RODO przed realizacją dostawy/usługi.")
         else:
             pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij umowę (umowa.odt).")
             num += 1
@@ -240,9 +242,11 @@ if rule_num == 1:
             num += 1
             pdf.multi_cell(180, 7, txt=str(num) + ". Odbierz podpisane kopie umowy.")
             num += 1
-            pdf.multi_cell(180, 7, txt=str(num) + ". Wyślij obie papierowe kopie firmie realizującej dostawę/usługę razem z dokumentem RODO (RODO.odt). Firma powinna"
-                                                  " podpisać dokumenty i odesłać jedną kopię umowy i dokument RODO przed realizacją"
-                                                  " dostawy/usługi.")
+            pdf.multi_cell(180, 7, txt=str(num) + ". Wyślij obie papierowe kopie firmie realizującej dostawę/usługę"
+                                                  " razem z dokumentem RODO (RODO.odt), kopią oferty złożonej"
+                                                  " przez wykonawcę, wzorem protokołu odbioru (protokol-odbioru.odt) i opisem przedmiotu"
+                                                  " zamówienia. Firma powinna podpisać dokumenty i odesłać jedną kopię"
+                                                  " umowy i dokument RODO przed realizacją dostawy/usługi.")
         num += 1
 
 # Sekcja 5 - zakup - faktura przelew lub zwykła
@@ -293,10 +297,11 @@ num += 1
 if research == 'tak':
     pdf.multi_cell(180, 7, txt="Ponieważ realizujesz zakup ze środków grantu badawczego, opis powinien jasno "
                                "wskazywać, że przedmiot zakupu będzie służył do realizacji badań.")
-pdf.multi_cell(180, 7, txt=str(
-        num) + ". Podpisz opis faktury.")
+pdf.multi_cell(180, 7, txt=str(num) + ". Podpisz opis faktury.")
 num += 1
-
+if rule_num == 1 and price > 10000:
+    pdf.multi_cell(180, 7, txt=str(num) + ". Odbierając towar wypełnij i podpisz protokół odbioru w dwóch kopiach - jedna dla wykonawcy, druga dla ciebie. Obie kopie powinny być podpisane przez przedstawiciela wykonawcy.")
+    num += 1
 # Sekcja 7 - złożenie faktury do działu administracyjnego
 pdf.multi_cell(180, 7, txt=str(num) + ". Przekaż wszystkie dokumenty do działu księgowego (p. 627).")
 num += 1
