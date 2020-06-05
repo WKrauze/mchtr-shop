@@ -76,9 +76,6 @@ if research == 'tak':
 else:
     pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij wniosek zgodnie z plikiem wniosek-standard.odt")
     num += 1
-pdf.multi_cell(180, 7, txt=str(num) + ". Podpisz wniosek jako 'osoba wnioskująca'. Zdobądź podpis dysponenta środków "
-                                      "jako 'kierownika projektu'. ")
-num += 1
 
 if split_payment == 'tak':
     pdf.multi_cell(180, 7, txt=str(num) + ". W polu przedmiot wniosku dopisz: 'poz. ... zał. 15 ustawy o VAT' - numer pozycji weź z pliku split-payment.pdf. ")
@@ -87,6 +84,10 @@ else:
     pdf.multi_cell(180, 7, txt=str(num) + ". W polu przedmiot wniosku dopisz: 'przedmiot wniosku niewykazany "
                                                "w zał. 15 ustawy o VAT'.")
     num += 1
+
+pdf.multi_cell(180, 7, txt=str(num) + ". Podpisz wniosek jako 'osoba wnioskująca'. Zdobądź podpis dysponenta środków "
+                                      "jako 'kierownika projektu'. ")
+num += 1
 
 pdf.multi_cell(180, 7, txt=str(num) + ". Złóż wniosek do działu administracyjnego (p. 627). ")
 num += 1
