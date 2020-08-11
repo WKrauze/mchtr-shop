@@ -11,9 +11,8 @@ elif platform == "win32":
     system = 'windows'
 
 euro = 4.2693
-forbidden_cpv_codes = ('302', '380', '385', '386')
-tender_threshold_research_euro = 214000*euro
-tender_threshold_nonresearch_euro = 30000*euro
+forbidden_cpv_codes = ('302', '380', '385', '386', '438')
+tender_threshold_euro = 30000 * euro
 
 pdf = FPDF()
 pdf.add_page()
@@ -48,8 +47,8 @@ while i:
 
 i = True
 while i:
-    split_payment = input("Czy zamawiany produkt/usługa znajduje się na liście split-payment.pdf? (tak/nie) ").lower()
-    if split_payment not in ('tak', 'nie'):
+    eu_funds = input("Czy zakup realizowany będzie ze środków pochodzących z Unii Europejskiej? (tak/nie) ").lower()
+    if eu_funds not in ('tak', 'nie'):
         print("Błędna odpowiedź. Tylko 'tak' i 'nie' są akceptowane. ")
     else:
         i = False
@@ -71,18 +70,17 @@ pdf.multi_cell(180, 7, txt="PRZYGOTOWANIE WNIOSKU", align="C")
 if research == 'tak':
     pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij wniosek zgodnie z plikiem wniosek-badawczy.odt. Pamiętaj o "
                                           "uzupełnieniu informacji o projekcie badawczym, z którego środków realizowany"
-                                          " jest zakup.")
+                                          " jest zakup oraz o ew. zmianie/usunięciu loga w dolnej części wniosku.")
     num += 1
 else:
     pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij wniosek zgodnie z plikiem wniosek-standard.odt")
     num += 1
 
-if split_payment == 'tak':
-    pdf.multi_cell(180, 7, txt=str(num) + ". W polu przedmiot wniosku dopisz: 'poz. ... zał. 15 ustawy o VAT' - numer pozycji weź z pliku split-payment.pdf. ")
+if eu_funds == 'tak':
+    pdf.multi_cell(180, 7, txt=str(num) + ". Zaznacz, że informacja o postępowaniu powinna być zamieszczona w Bazie Konkurencyjności. ")
     num += 1
 else:
-    pdf.multi_cell(180, 7, txt=str(num) + ". W polu przedmiot wniosku dopisz: 'przedmiot wniosku niewykazany "
-                                               "w zał. 15 ustawy o VAT'.")
+    pdf.multi_cell(180, 7, txt=str(num) + ". Zaznacz, że informacja o postępowaniu nie powinna być zamieszczona w Bazie Konkurencyjności. ")
     num += 1
 
 pdf.multi_cell(180, 7, txt=str(num) + ". Podpisz wniosek jako 'osoba wnioskująca'. Zdobądź podpis dysponenta środków "
@@ -95,11 +93,11 @@ num += 1
 if (not tender_cpv and price < 1000) or (tender_cpv and research == 'tak' and price < 1000):
     rule = 'nie podlega ustawie Prawo zamówień publicznych.'
     rule_num = 0
-elif research == 'tak' and price < tender_threshold_research_euro:
-    rule = 'podlega Zarządzeniu Dziekana nr 03/2016.'
+elif research == 'tak' and price < tender_threshold_euro:
+    rule = 'podlega Zarządzeniu Dziekana nr 05/2020.'
     rule_num = 1
-elif (not tender_cpv) and (price < tender_threshold_nonresearch_euro):
-    rule = 'podlega Zarządzeniu Dziekana nr 8/2014.'
+elif (not tender_cpv) and (price < tender_threshold_euro):
+    rule = 'podlega Zarządzeniu Dziekana nr 04/2020.'
     rule_num = 1
 else:
     rule = 'podlega pod przetarg nieograniczony.'
@@ -130,8 +128,8 @@ if rule_num == 1:
                                               " wykonawcy, notatka z przeprowadzonej rozmowy telefonicznej z wykonawcą"
                                               " lub pisemna oferta złożona przez wykonawcę.")
         num += 1
-    elif price <= tender_threshold_nonresearch_euro:
-        pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij zaproszenie do składania ofert (zaproszenie.odt) oraz opis"
+    elif price <= tender_threshold_euro:
+        pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij zaproszenie do składania ofert (zaproszenie-umowa.odt) oraz opis"
                                               " przedmiotu zamówienia (opis-przedmiotu-zamowienia.odt). Załącz"
                                               " wzór propozycji cenowej (wzor-propozycji-cenowej.odt) i taki"
                                               " komplet dokumentów przekaż Dyrektorowi (pozostaw w p. 627).")
@@ -139,8 +137,8 @@ if rule_num == 1:
         pdf.multi_cell(180, 7, txt=str(num) + ". Dyrektor podpisze zaproszenie. Odbierz dokumenty.")
         num += 1
         pdf.multi_cell(180, 7, txt=str(num) + ". Zeskanuj podpisane zaproszenie. Skan zaproszenia, skan opisu"
-                                              " przedmiotu zamówienia oraz elektroniczną, edytowalną wersję wzoru"
-                                              " propozycji cenowej wyślij mailem do co najmniej 3 firm. W przypadku"
+                                              " przedmiotu zamówienia, elektroniczną, edytowalną wersję wzoru"
+                                              " propozycji cenowej oraz wzór umowy wyślij mailem do co najmniej 3 firm. W przypadku"
                                               " usług/towarów specjalistycznych, dla których ciężko o 3 firmy mogące"
                                               " zrealizować dostawę/usługę istnieje możliwość wysłania zaproszenia"
                                               " tylko do 1 firmy pod warunkiem, że wrzucisz zaproszenie do składania"
@@ -148,8 +146,8 @@ if rule_num == 1:
         num += 1
         pdf.multi_cell(180, 7, txt=str(num) + ". Zbierz oferty przesłane przez firmy.")
         num += 1
-    elif research == 'tak' and price > tender_threshold_nonresearch_euro:
-        pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij zaproszenie do składania ofert (zaproszenie.odt) oraz opis"
+    elif research == 'tak' and price > tender_threshold_euro:
+        pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij zaproszenie do składania ofert (zaproszenie-umowa.odt) oraz opis"
                                               " przedmiotu zamówienia (opis-przedmiotu-zamowienia.odt). Załącz"
                                               " wzór propozycji cenowej (wzor-propozycji-cenowej.odt) i taki"
                                               " komplet dokumentów przekaż Pełnomocnikowi Dziekana ds. zamówień"
@@ -167,8 +165,8 @@ if rule_num == 1:
                                               " zamówienia.")
         num += 1
         pdf.multi_cell(180, 7, txt=str(num) + ". Zeskanuj podpisane zaproszenie. Skan zaproszenia, skan opisu"
-                                              " przedmiotu zamówienia oraz elektroniczną, edytowalną wersję wzoru"
-                                              " propozycji cenowej wyślij mailem do co najmniej 3 firm.")
+                                              " przedmiotu zamówienia, elektroniczną, edytowalną wersję wzoru"
+                                              " propozycji cenowej oraz wzór umowy wyślij mailem do co najmniej 3 firm.")
         num += 1
         pdf.multi_cell(180, 7, txt=str(num) + ". Zbierz oferty przesłane przez firmy.")
         num += 1
@@ -181,17 +179,17 @@ if rule_num == 1:
         pdf.multi_cell(180, 7, txt=str(num) + ". Na podstawie wykonanego przeglądu ofert uzupełnij notatkę służbową"
                                               " (notatka-sluzbowa.odt). Wydrukuj i podpisz.")
         num += 1
-    elif price <= tender_threshold_nonresearch_euro:
+    elif price <= tender_threshold_euro:
         pdf.multi_cell(180, 7, txt="RAPORT WYKONANYCH CZYNNOŚCI", align="C")
         pdf.multi_cell(180, 7, txt=str(num) + ". Na podstawie wykonanego przeglądu ofert uzupełnij raport wykonanych"
                                               " czynności (protokol-wykonanych-czynnosci.odt). Nie zmieniaj kursu euro"
-                                              " w raporcie. Wydrukuj i podpisz. W punkcie 9 raportu należy zebrać"
+                                              " w raporcie. Wydrukuj i podpisz. W punkcie 7 raportu należy zebrać"
                                               " podpisy 3 pracowników Instytutu. ")
         num += 1
-    elif research == 'tak' and price > tender_threshold_nonresearch_euro:
+    elif research == 'tak' and price > tender_threshold_euro:
         pdf.multi_cell(180, 7, txt=str(num) + ". Na podstawie wykonanego przeglądu ofert uzupełnij raport wykonanych"
                                           " czynności (protokol-wykonanych-czynnosci.odt). Nie zmieniaj kursu euro"
-                                          " w raporcie. Wydrukuj i podpisz. W punkcie 9 raportu należy zebrać"
+                                          " w raporcie. Wydrukuj i podpisz. W punkcie 7 raportu należy zebrać"
                                           " podpisy 3 pracowników Instytutu. ")
         num += 1
         pdf.multi_cell(180, 7, txt=str(num) + ". Przekaż raport do zatwierdzenia przez Dziekana. ")
@@ -223,7 +221,7 @@ if rule_num == 1:
         if research == 'tak':
             pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij umowę (umowa-badawczy.odt).")
             num += 1
-            if price <= tender_threshold_nonresearch_euro:
+            if price <= tender_threshold_euro:
                 pdf.multi_cell(180, 7, txt=str(num) + ". Złóż dwie kopie umowy, jedną kopię raportu wykonanych czynności i wydrukowane oferty do Dyrektora.")
                 num += 1
             else:
@@ -272,16 +270,6 @@ elif rule_num == 1 and price > 10000:
 pdf.multi_cell(180, 7, txt="", align="C")
 pdf.multi_cell(180, 7, txt="Dane do faktury:", align="C")
 pdf.multi_cell(180, 7, txt="Politechnika Warszawska", align="C")
-pdf.multi_cell(180, 7, txt="Instytut Mikromechaniki i Fotoniki", align="C")
-pdf.multi_cell(180, 7, txt="ul. Św. A. Boboli 8", align="C")
-pdf.multi_cell(180, 7, txt="02-525 Warszawa", align="C")
-pdf.multi_cell(180, 7, txt="NIP: 525-000-58-34", align="C")
-pdf.multi_cell(180, 7, txt="", align="C")
-
-pdf.multi_cell(180, 7, txt="Dopuszczalne też jest wystawienie faktury na: ")
-
-pdf.multi_cell(180, 7, txt="", align="C")
-pdf.multi_cell(180, 7, txt="Politechnika Warszawska", align="C")
 pdf.multi_cell(180, 7, txt="Plac Politechniki 1", align="C")
 pdf.multi_cell(180, 7, txt="00-661 Warszawa", align="C")
 pdf.multi_cell(180, 7, txt="NIP: 525-000-58-34", align="C")
@@ -307,7 +295,7 @@ if rule_num == 1 and price > 10000:
 pdf.multi_cell(180, 7, txt=str(num) + ". Przekaż wszystkie dokumenty do działu księgowego (p. 627).")
 num += 1
 
-if research == 'tak' and price > tender_threshold_nonresearch_euro:
+if research == 'tak' and price > tender_threshold_euro:
     pdf.multi_cell(180, 7, txt=str(num) + ". Umieść na stronie Biuletynu Informacji Publicznej PW ogłoszenie o"
                                           " udzieleniu zamówienia podając nazwę firmy, z którą zawarto umowę lub"
                                           " informację o nieudzieleniu zamówienia.")
