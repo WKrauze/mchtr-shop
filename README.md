@@ -4,7 +4,7 @@ Skrypt genererujący plan realizacji zakupów na Wydziale Mechatroniki PW.
 Wygenerowany plan zależy od:
 - kwoty zakupu,
 - tego, czy zakup realizowany jest z grantu badawczego
-- tego, czy przedmiot zakupu znajduje się na liście split-payment
+- tego, czy zakup realizowany jest ze środków UE
 - tego, czy przedmiot zakupu znajduje się na liście przetargowych kodów CPV.
 
 # Wymagania
