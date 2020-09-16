@@ -1,4 +1,4 @@
-# mchtr-shop 0.45
+# mchtr-shop 0.7
 # LICENSE: MIT
 
 from fpdf import FPDF
@@ -66,6 +66,10 @@ num = 1
 
 
 # Sekcja 1 - wypisanie wniosku (naukowy, nienaukowy, split-payment)
+if price > 50000:
+    pdf.multi_cell(180, 7, txt=str(num) + ". Z racji na kwotę zakupu, procedurę zakupową nadzoruje bezpośrednio pełnomocnik Dziekana ds. zamówień publicznych (doc. Igielski). ")
+    num += 1
+
 pdf.multi_cell(180, 7, txt="PRZYGOTOWANIE WNIOSKU", align="C")
 if research == 'tak':
     pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij wniosek zgodnie z plikiem wniosek-badawczy.odt. Pamiętaj o "
@@ -77,17 +81,19 @@ else:
     num += 1
 
 if eu_funds == 'tak':
-    pdf.multi_cell(180, 7, txt=str(num) + ". Zaznacz, że informacja o postępowaniu powinna być zamieszczona w Bazie Konkurencyjności. ")
+    pdf.multi_cell(180, 7, txt=str(num) + ". Zaznacz, że informacja o postępowaniu powinna być zamieszczona w Bazie Konkurencyjności. Jednocześnie poinformuj o tym fakcie p. Marię Lepę, która zamieści w Bazie informację o postępowaniu. ")
     num += 1
 else:
-    pdf.multi_cell(180, 7, txt=str(num) + ". Zaznacz, że informacja o postępowaniu nie powinna być zamieszczona w Bazie Konkurencyjności. ")
+    pdf.multi_cell(180, 7, txt=str(num) + ". Zaznacz, że informacja o postępowaniu nie powinna być zamieszczona w Bazie Konkurencyjności.")
     num += 1
 
-pdf.multi_cell(180, 7, txt=str(num) + ". Podpisz wniosek jako 'osoba wnioskująca'. Zdobądź podpis dysponenta środków "
-                                      "jako 'kierownika projektu'. ")
-num += 1
-
-pdf.multi_cell(180, 7, txt=str(num) + ". Złóż wniosek do działu administracyjnego (p. 627). ")
+if research == 'tak':
+    pdf.multi_cell(180, 7, txt=str(num) + ". Podpisz wniosek jako 'osoba wnioskująca'. Zdobądź podpis 'kierownika projektu'. ")
+    num += 1
+else:
+    pdf.multi_cell(180, 7, txt=str(num) + ". Podpisz wniosek jako 'osoba wnioskująca'. Zdobądź podpis 'kierownika projektu' (tylko w przypadku zakupu realizowanego w ramach projektu). ")
+    num += 1
+pdf.multi_cell(180, 7, txt=str(num) + ". Złóż wniosek do działu administracyjnego swojego Instytutu. ")
 num += 1
 
 if (not tender_cpv and price < 1000) or (tender_cpv and research == 'tak' and price < 1000):
@@ -132,7 +138,7 @@ if rule_num == 1:
         pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij zaproszenie do składania ofert (zaproszenie-umowa.odt) oraz opis"
                                               " przedmiotu zamówienia (opis-przedmiotu-zamowienia.odt). Załącz"
                                               " wzór propozycji cenowej (wzor-propozycji-cenowej.odt) i taki"
-                                              " komplet dokumentów przekaż Dyrektorowi (pozostaw w p. 627).")
+                                              " komplet dokumentów przekaż Dyrektorowi Instytutu.")
         num += 1
         pdf.multi_cell(180, 7, txt=str(num) + ". Dyrektor podpisze zaproszenie. Odbierz dokumenty.")
         num += 1
@@ -151,7 +157,7 @@ if rule_num == 1:
                                               " przedmiotu zamówienia (opis-przedmiotu-zamowienia.odt). Załącz"
                                               " wzór propozycji cenowej (wzor-propozycji-cenowej.odt) i taki"
                                               " komplet dokumentów przekaż Pełnomocnikowi Dziekana ds. zamówień"
-                                              " publicznych oraz Dziekanowi (pozostaw w p. 627).")
+                                              " publicznych oraz Dziekanowi.")
         num += 1
         pdf.multi_cell(180, 7, txt=str(num) + ". Dziekan podpisze zaproszenie. Odbierz dokumenty.")
         num += 1
@@ -219,10 +225,13 @@ if rule_num == 1:
     else:
         pdf.multi_cell(180, 7, txt="PODPISANIE UMOWY", align="C")
         if research == 'tak':
-            pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij umowę (umowa-badawczy.odt).")
+            pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij umowę (umowa-badawczy.odt). Jeśli zmodyfikowałaś/eś wzór umowy, musisz uzyskać jego zatwierdzenie przez Biuro Organizacyjno Prawne PW.")
             num += 1
-            if price <= tender_threshold_euro:
-                pdf.multi_cell(180, 7, txt=str(num) + ". Złóż dwie kopie umowy, jedną kopię raportu wykonanych czynności i wydrukowane oferty do Dyrektora.")
+            if price <= 50000:
+                pdf.multi_cell(180, 7, txt=str(num) + ". Złóż dwie kopie umowy, jedną kopię raportu wykonanych czynności i wydrukowane oferty do Dyrektora Instytutu.")
+                num += 1
+            elif price <= tender_threshold_euro:
+                pdf.multi_cell(180, 7, txt=str(num) + ". Złóż dwie kopie umowy, jedną kopię raportu wykonanych czynności i wydrukowane oferty do Dyrektora Instytutu. Wybór wykonawcy musi zatwierdzić Dziekan.")
                 num += 1
             else:
                 pdf.multi_cell(180, 7, txt=str(num) + ". Złóż dwie kopie umowy, jedną kopię raportu wykonanych czynności i wydrukowane oferty do Dziekana.")
@@ -235,7 +244,7 @@ if rule_num == 1:
                                                   " zamówienia. Firma powinna podpisać dokumenty i odesłać jedną kopię"
                                                   " umowy i dokument RODO przed realizacją dostawy/usługi.")
         else:
-            pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij umowę (umowa.odt).")
+            pdf.multi_cell(180, 7, txt=str(num) + ". Wypełnij umowę (umowa.odt). Jeśli zmodyfikowałaś/eś wzór umowy, musisz uzyskać jego zatwierdzenie przez Biuro Organizacyjno Prawne PW.")
             num += 1
             pdf.multi_cell(180, 7, txt=str(num) + ". Złóż dwie kopie umowy, jedną kopię raportu wykonanych czynności i wydrukowane oferty do Dyrektora.")
             num += 1
@@ -253,17 +262,18 @@ pdf.multi_cell(180, 7, txt="ZAKUP", align="C")
 if rule_num == 0:
     pdf.multi_cell(180, 7, txt=str(num) + ". Znajdź interesujący Cię przedmiot i dokonaj zakupu. Możesz zapłacić"
                " własnymi pieniędzmi (po realizacji zakupu dostaniesz zwrot) lub poprosić firmę o fakturę przelewową"
-               " płatną w terminie 14 dni od dnia dostarczenia towaru (faktura zostanie opłacona przez księgowość).")
+               " płatną w terminie min. 14 dni od dnia dostarczenia towaru (faktura zostanie opłacona przez księgowość).")
     num += 1
 elif rule_num == 1 and price <= 10000:
     pdf.multi_cell(180, 7, txt=str(num) + ". Po podpisaniu zamówienia przez firmę, firma może zrealizować dostawę/usługę. Możesz zapłacić"
                " własnymi pieniędzmi (po realizacji zakupu dostaniesz zwrot) lub poprosić firmę o fakturę przelewową"
-               " płatną w terminie 14 dni od dnia dostarczenia towaru (faktura zostanie opłacona przez księgowość).")
+               " płatną w terminie zgodnym z zamówieniem (min. okres płatności to 14 dni od dnia dostarczenia towaru - faktura zostanie opłacona przez księgowość)."
+               " Upewnij się, że faktura wystawiona będzie na poprawne dane.")
     num += 1
 elif rule_num == 1 and price > 10000:
     pdf.multi_cell(180, 7, txt=str(
         num) + ". Po podpisaniu umowy przez firmę, firma może zrealizować dostawę/usługę. Firma powinna wystawić fakturę przelewową"
-               " płatną w terminie 14 dni od dnia dostarczenia towaru (faktura zostanie opłacona przez księgowość)."
+               " płatną w terminie zgodnym z umową (min. okres płatności to 14 dni od dnia dostarczenia towaru - faktura zostanie opłacona przez księgowość)."
                " Upewnij się, że faktura wystawiona będzie na poprawne dane.")
     num += 1
 
@@ -292,7 +302,7 @@ if rule_num == 1 and price > 10000:
     pdf.multi_cell(180, 7, txt=str(num) + ". Odbierając towar wypełnij i podpisz protokół odbioru w dwóch kopiach - jedna dla wykonawcy, druga dla ciebie. Obie kopie powinny być podpisane przez przedstawiciela wykonawcy.")
     num += 1
 # Sekcja 7 - złożenie faktury do działu administracyjnego
-pdf.multi_cell(180, 7, txt=str(num) + ". Przekaż wszystkie dokumenty do działu księgowego (p. 627).")
+pdf.multi_cell(180, 7, txt=str(num) + ". Przekaż wszystkie dokumenty do działu księgowego.")
 num += 1
 
 if research == 'tak' and price > tender_threshold_euro:
